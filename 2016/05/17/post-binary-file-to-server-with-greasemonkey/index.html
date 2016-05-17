@@ -1,0 +1,703 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Greasemonkey,HTTP,enctype," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="问题背景在用GreaseMonkey的过程中，偶尔遇到需要上传文件到服务器的情况，而GM并不支持直接上传二进制文件（本文中专指图片文件），因为它的参数是这么规定的：
+
+data：String Optional. Data to send in the request body. Usually for POST method requests.
+
+也就是说，参数里的data只支持 String 类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Greasemonkey上传文件到服务器">
+<meta property="og:url" content="https://holynewbie.github.io/2016/05/17/post-binary-file-to-server-with-greasemonkey/index.html">
+<meta property="og:site_name" content="Holy Newbie">
+<meta property="og:description" content="问题背景在用GreaseMonkey的过程中，偶尔遇到需要上传文件到服务器的情况，而GM并不支持直接上传二进制文件（本文中专指图片文件），因为它的参数是这么规定的：
+
+data：String Optional. Data to send in the request body. Usually for POST method requests.
+
+也就是说，参数里的data只支持 String 类">
+<meta property="og:updated_time" content="2016-05-17T07:10:24.611Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Greasemonkey上传文件到服务器">
+<meta name="twitter:description" content="问题背景在用GreaseMonkey的过程中，偶尔遇到需要上传文件到服务器的情况，而GM并不支持直接上传二进制文件（本文中专指图片文件），因为它的参数是这么规定的：
+
+data：String Optional. Data to send in the request body. Usually for POST method requests.
+
+也就是说，参数里的data只支持 String 类">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 使用Greasemonkey上传文件到服务器 | Holy Newbie </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Holy Newbie</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">your code sucks , push will be terminated</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用Greasemonkey上传文件到服务器
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-17T14:04:49+08:00" content="2016-05-17">
+              2016-05-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Coding/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/17/post-binary-file-to-server-with-greasemonkey/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/17/post-binary-file-to-server-with-greasemonkey/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>在用GreaseMonkey的过程中，偶尔遇到需要上传文件到服务器的情况，而GM并不支持直接上传二进制文件（本文中专指<em>图片文件</em>），因为它的参数是这么规定的：</p>
+<blockquote>
+<p>data：String Optional. Data to send in the request body. Usually for POST method requests.</p>
+</blockquote>
+<p>也就是说，参数里的data只支持 <code>String</code> 类型的变量。而且从目前来看，GM似乎并没有打算支持上传二进制文件，就像原生 <code>*XMLHttpRequest</code> 那样，支持 <code>FormData</code>数据。所以，要想支持二进制文件，还得自己动手实现。<br>网上已经有一些GM的库，支持二进制文件，比如这一个<a href="http://userscripts-mirror.org/scripts/show/69456" target="_blank" rel="external">Binary library</a> ,不过，这个时间比较早了，有一些可改进的地方。所以，就以这个为原型，写了一个新的函数，来支持二进制文件上传。<br><a id="more"></a></p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>其实，要想让GM支持二进制文件，也不难，首先得回归到HTTP本身。<br>在表单中，如果有file类型的输入，即<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">name</span>=<span class="string">""</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>我们要在form标签中加上一个enctype的属性<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">name</span>=<span class="string">""</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"POST"</span> <span class="attr">enctype</span>=<span class="string">"multipart/form-data"</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>之所以能够提交二进制，就在于这个属性</p>
+<blockquote>
+<p>enctype=”multipart/form-data”</p>
+</blockquote>
+<p>有关这个属性的部分，请大家参考<a href="http://blog.csdn.net/five3/article/details/7181521" target="_blank" rel="external"> HTTP协议之multipart/form-data请求分析 </a><br>在了解了这些内容之后，我们就可以实现GM支持二进制文件上传了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> BinaryPost = BinaryPost || (<span class="function"><span class="keyword">function</span>(<span class="params">GM_POST</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//生成标识</span></span><br><span class="line">	<span class="keyword">var</span> getBoundary = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">var</span> z = <span class="number">98729145294692</span>;  <span class="keyword">var</span> a = <span class="number">12400722650394</span>;</span><br><span class="line">  		<span class="keyword">return</span> <span class="built_in">Array</span>(<span class="number">28</span>).join(<span class="string">'-'</span>) + <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (z - a)) + a;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">		<span class="keyword">var</span> body = [];</span><br><span class="line">		<span class="keyword">var</span> boundary = getBoundary();</span><br><span class="line">		<span class="comment">/**</span><br><span class="line">    		可能有多个文件需要上传</span><br><span class="line">    		因此需要等待每个文件读取完成</span><br><span class="line">    		这里使用了ES6 中的Promise来实现</span><br><span class="line">		*/</span></span><br><span class="line">		<span class="built_in">Promise</span>.all((<span class="built_in">Object</span>.getOwnPropertyNames(obj.data)).map(<span class="function"><span class="keyword">function</span>(<span class="params">filedName</span>)</span>&#123;</span><br><span class="line">			<span class="keyword">if</span>(obj.data[filedName] <span class="keyword">instanceof</span> Blob)&#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">success</span>)</span>&#123;</span><br><span class="line">					<span class="keyword">let</span> fr = <span class="keyword">new</span> FileReader();</span><br><span class="line">					fr.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">						body.push(<span class="string">'--'</span> + boundary);</span><br><span class="line">						<span class="keyword">var</span> disp = <span class="string">'Content-Disposition: form-data; name="'</span> + filedName + <span class="string">'"'</span>;</span><br><span class="line">						<span class="comment">//必须添加文件名，否则服务器可能报错</span></span><br><span class="line">						disp += <span class="string">'; filename="'</span> + (obj.data[filedName].name||<span class="string">'BinaryPost'</span>) + <span class="string">'"'</span>;</span><br><span class="line">						body.push(disp);</span><br><span class="line">						body.push(<span class="string">'Content-type: '</span> + obj.data[filedName].type);</span><br><span class="line">						body.push(<span class="string">''</span>);</span><br><span class="line">						body.push(fr.result);</span><br><span class="line">						success();</span><br><span class="line">					&#125;;</span><br><span class="line">					fr.readAsBinaryString(obj.data[filedName]);</span><br><span class="line">				&#125;);</span><br><span class="line">			&#125;</span><br><span class="line">			body.push(<span class="string">'Content-Disposition: form-data; name="'</span> + filedName + <span class="string">'"'</span>);</span><br><span class="line">			body.push(<span class="string">''</span>);</span><br><span class="line">			body.push(obj.data[filedName]);</span><br><span class="line">			<span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(<span class="literal">true</span>);</span><br><span class="line">		&#125;)).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">			body.push(<span class="string">'--'</span> + boundary + <span class="string">'--'</span>);</span><br><span class="line">			<span class="keyword">var</span> data = body.join(<span class="string">'\r\n'</span>);</span><br><span class="line">			<span class="keyword">var</span> headers = &#123;&#125;;</span><br><span class="line">			<span class="keyword">if</span>(obj.headers)&#123; headers = obj.headers; &#125;</span><br><span class="line">			headers[<span class="string">"Content-Type"</span>] = <span class="string">'multipart/form-data; boundary='</span> + boundary;</span><br><span class="line">			headers[<span class="string">"Content-Length"</span>] = data.length</span><br><span class="line">			<span class="keyword">var</span> request = &#123;</span><br><span class="line">				method: <span class="string">'POST'</span>,</span><br><span class="line">				url: obj.url,</span><br><span class="line">				binary: <span class="literal">true</span>,</span><br><span class="line">				headers: headers,</span><br><span class="line">				data: data,</span><br><span class="line">				onload: obj.onload,</span><br><span class="line">				ontimeout: obj.ontimeout || obj.onload,</span><br><span class="line">				timeout: obj.timeout || <span class="number">2000</span>,</span><br><span class="line">				onerror:obj.onload,</span><br><span class="line">				onprogress: obj.onprogress || <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">			&#125;;</span><br><span class="line">			GM_POST(request);</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)(GM_xmlhttpRequest);</span><br></pre></td></tr></table></figure>
+<p>使用方法就是</p>
+<blockquote>
+<p>BinaryPost(object)</p>
+</blockquote>
+<p>其中object 有如下属性</p>
+<blockquote>
+<p>url String 必须 数据要提交的页面<br>onload Function 必须 数据上传完成后的回调函数<br>timeout Number 可选 等待的毫秒数，默认2000ms<br>timeout Function 可选 超时后执行的回调函数，如果没有，则执行onload函数<br>data Object 必须 要提交数据 包含以下属性</p>
+<blockquote>
+<p>filedName Blob || File || String 必须 filedName为form表单中的字段名。这里并不支持一个字段多个文件，所以，你必须为每个文件使用一个字段。</p>
+</blockquote>
+</blockquote>
+<p>使用方法很简单，如果你直接拷贝上面的代码，直接使用<code>BinaryPost</code>即可。当然，你也可以通过引用外部外部文件的方式来使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//@require https://raw.githubusercontent.com/holynewbie/uploadPicToWeibo/gh-pages/BinaryPost.js</span><br></pre></td></tr></table></figure></p>
+<p>然后直接使用即可。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="holynewbie Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Greasemonkey/" rel="tag">#Greasemonkey</a>
+          
+            <a href="/tags/HTTP/" rel="tag">#HTTP</a>
+          
+            <a href="/tags/enctype/" rel="tag">#enctype</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/13/sublime-text-3-3114-license-key/" rel="next" title="Sublime Text 3 (3114) 注册码">
+                <i class="fa fa-chevron-left"></i> Sublime Text 3 (3114) 注册码
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/17/post-binary-file-to-server-with-greasemonkey/"
+           data-title="使用Greasemonkey上传文件到服务器" data-url="https://holynewbie.github.io/2016/05/17/post-binary-file-to-server-with-greasemonkey/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ww4.sinaimg.cn/large/87c9773cjw1f3mvw0io8qj20sg0sgq7f.jpg"
+               alt="holynewbie" />
+          <p class="site-author-name" itemprop="name">holynewbie</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题背景"><span class="nav-number">1.</span> <span class="nav-text">问题背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">2.</span> <span class="nav-text">解决方法</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">holynewbie</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"holynewbie"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

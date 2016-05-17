@@ -253,6 +253,132 @@
             
               
                 
+                <a class="post-title-link" href="/2016/05/17/post-binary-file-to-server-with-greasemonkey/" itemprop="url">
+                  使用Greasemonkey上传文件到服务器
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-17T14:04:49+08:00" content="2016-05-17">
+              2016-05-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Coding/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/17/post-binary-file-to-server-with-greasemonkey/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/17/post-binary-file-to-server-with-greasemonkey/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>在用GreaseMonkey的过程中，偶尔遇到需要上传文件到服务器的情况，而GM并不支持直接上传二进制文件（本文中专指<em>图片文件</em>），因为它的参数是这么规定的：</p>
+<blockquote>
+<p>data：String Optional. Data to send in the request body. Usually for POST method requests.</p>
+</blockquote>
+<p>也就是说，参数里的data只支持 <code>String</code> 类型的变量。而且从目前来看，GM似乎并没有打算支持上传二进制文件，就像原生 <code>*XMLHttpRequest</code> 那样，支持 <code>FormData</code>数据。所以，要想支持二进制文件，还得自己动手实现。<br>网上已经有一些GM的库，支持二进制文件，比如这一个<a href="http://userscripts-mirror.org/scripts/show/69456">Binary library</a> ,不过，这个时间比较早了，有一些可改进的地方。所以，就以这个为原型，写了一个新的函数，来支持二进制文件上传。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/05/17/post-binary-file-to-server-with-greasemonkey/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/05/13/sublime-text-3-3114-license-key/" itemprop="url">
                   Sublime Text 3 (3114) 注册码
                 </a>
@@ -396,7 +522,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-count">2</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -404,7 +530,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -413,7 +539,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
