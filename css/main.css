@@ -1663,7 +1663,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #baffcd;
+  background: #418298;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2539,4 +2539,14 @@ hr {
     width: auto;
     text-align: center;
   }
+}
+#pics-parallel-2 img {
+  display: inline-block !important;
+  width: 40%;
+  margin: 0 4%;
+}
+#pics-parallel-3 img {
+  display: inline-block !important;
+  width: 30%;
+  margin: 0 2%;
 }
