@@ -84,17 +84,20 @@
 
 
 
-<meta name="description" content="Javascript是一种面向对象语言，其但和C++、Java这种OO语言不同，JS的OO是通过原型链来实现。关于JS的原型链，已经有很多的文章描述过了。在这里描述的，则是关于Javascript中Function与Object的原型链的关系">
+<meta name="description" content="（Javascript是ECMAScript的一种方言，在下面的描述中，不做区分。）
+Javascript是一种面向对象语言，其但和C++、Java这种OO语言不同，JS的OO是通过原型链来实现。关于JS的原型链，已经有很多的文章描述过了。在这里描述的，则是关于Javascript中Function与Object的原型链的关系。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Javascript中Function与Object的关系">
 <meta property="og:url" content="https://holynewbie.github.io/2017/05/01/relationship-between-Object-and-Function-in-Javascript/index.html">
 <meta property="og:site_name" content="Holy Newbie">
-<meta property="og:description" content="Javascript是一种面向对象语言，其但和C++、Java这种OO语言不同，JS的OO是通过原型链来实现。关于JS的原型链，已经有很多的文章描述过了。在这里描述的，则是关于Javascript中Function与Object的原型链的关系">
+<meta property="og:description" content="（Javascript是ECMAScript的一种方言，在下面的描述中，不做区分。）
+Javascript是一种面向对象语言，其但和C++、Java这种OO语言不同，JS的OO是通过原型链来实现。关于JS的原型链，已经有很多的文章描述过了。在这里描述的，则是关于Javascript中Function与Object的原型链的关系。">
 <meta property="og:image" content="https://holynewbie.github.io//ws3.sinaimg.cn/large/7156d016ly1ff5p1xosxvj20p00k1mye.jpg">
-<meta property="og:updated_time" content="2017-05-01T03:25:31.224Z">
+<meta property="og:updated_time" content="2017-05-01T04:11:34.732Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript中Function与Object的关系">
-<meta name="twitter:description" content="Javascript是一种面向对象语言，其但和C++、Java这种OO语言不同，JS的OO是通过原型链来实现。关于JS的原型链，已经有很多的文章描述过了。在这里描述的，则是关于Javascript中Function与Object的原型链的关系">
+<meta name="twitter:description" content="（Javascript是ECMAScript的一种方言，在下面的描述中，不做区分。）
+Javascript是一种面向对象语言，其但和C++、Java这种OO语言不同，JS的OO是通过原型链来实现。关于JS的原型链，已经有很多的文章描述过了。在这里描述的，则是关于Javascript中Function与Object的原型链的关系。">
 <meta name="twitter:image" content="https://holynewbie.github.io//ws3.sinaimg.cn/large/7156d016ly1ff5p1xosxvj20p00k1mye.jpg">
 
 
@@ -300,11 +303,27 @@
       
 
       
-        <p>Javascript是一种面向对象语言，其但和C++、Java这种OO语言不同，JS的OO是通过原型链来实现。关于JS的原型链，已经有很多的文章描述过了。在这里描述的，则是关于Javascript中Function与Object的原型链的关系</p>
+        <p>（Javascript是ECMAScript的一种方言，在下面的描述中，不做区分。）</p>
+<p>Javascript是一种面向对象语言，其但和C++、Java这种OO语言不同，JS的OO是通过原型链来实现。关于JS的原型链，已经有很多的文章描述过了。在这里描述的，则是关于Javascript中Function与Object的原型链的关系。</p>
 <a id="more"></a>
-<p><img src="//ws3.sinaimg.cn/large/7156d016ly1ff5p1xosxvj20p00k1mye.jpg" alt="">
-<a href="http://relationship-between-Object-and-Funtion-in-Javascript.md" target="_blank" rel="external">relationship-between-Object-and-Funtion-in-Javascript.md</a></p>
-
+<p>当我们谈论Javascript中的“对象”时，不仅仅是Object，因为它本身也是对象的一种。在Javascript的基本类型（undefined、boolean、null、string、number、object、symbol）中，object指的是我们一般意义上的“对象”，是一种类型，而不是我们在这里要说的Object类型的对象。</p>
+<p>在Javascript基础对象中，有一些是最常用的，包括Object、Function、Array、Date。它们都是对象，那么他们的关系是怎样的呢？（在这里，我们探讨一下Object与Function的关系）</p>
+<p>记得以前，有人跟我讲过，说Object和Function是互相继承。感觉说的好像很有道理呢。Object是函数，Function是对象。实际上，他们并非相互继承。</p>
+<p>对于Object和Function，我们一般指的是他们的构造函数，因为global object（全局对象，在浏览器环境指window）的Object和Function属性的初始值，就是Object constructor和Function constructor。</p>
+<p>对于Javascript对象，标准定义了许多的内部槽（<code>internal slot</code>），比如<code>[[prototype]]</code>，我们可以通过<code>__ptoto__</code>属性来访问。这和<code>prototype</code>属性并不是一个概念。而这正式Javascript的原型链的实现基础。</p>
+<p>关于Object和Function的关系，我们可以用下面这样一张图来进行描述。</p>
+<p><img src="//ws3.sinaimg.cn/large/7156d016ly1ff5p1xosxvj20p00k1mye.jpg" alt=""></p>
+<p>如图所示，对象原型链的尽头是<code>null</code>，这并不意外。箭头指向的地方，是属性关系。而以%包裹的是Javascrpit的固有对象（intrinsic object）。从图可以看到，有两个很重要的固有对象：</p>
+<ul>
+<li><code>%ObjectPrototype%</code></li>
+<li><code>%FunctionPrototype%</code></li>
+</ul>
+<p>这两个固有对象，通过一定的属性包含关系，形成了Function与Object的拓扑图。需要说明的一点的是，<code>%FunctionPrototype%</code>对象没有<code>prototype</code>属性。</p>
+<p>Function和Object并非相互继承，它们都有一个共同的祖先，<code>%ObjectPrototype%</code>，这才导致了他们有一些共同的属性和性质。</p>
+<p>那么，为什么Object又是函数呢？很简单，Javascript对象，有<code>[[call]]</code>和<code>[[constructor]]</code>内部槽，它们决定了js对象是否为callable、以函数进行调用时的行为、是否可为构造函数、以构造函数进行调用时的行为。</p>
+<p>PS:
+对于图上的关系，我们可以用以下代码做简单的验证</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype === <span class="built_in">Function</span>.__proto__</span><br><span class="line"><span class="built_in">Function</span>.prototype === <span class="built_in">Object</span>.__proto__</span><br><span class="line"><span class="built_in">Function</span>.prototype.__proto__ === <span class="built_in">Object</span>.prototype</span><br><span class="line"><span class="built_in">Object</span>.prototype.constructor === <span class="built_in">Object</span></span><br></pre></td></tr></table></figure>
       
     </div>
 
